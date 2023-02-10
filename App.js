@@ -3,6 +3,7 @@ import { NativeRouter, Route, Routes, Link, Text } from "react-router-native";
 import HomeV0 from './components/HomeV0'
 import Home from './components/Home'
 import Scan from './components/Scan';
+import { useState } from 'react';
 
 export default function App() {
 

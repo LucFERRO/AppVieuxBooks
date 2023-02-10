@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
-export default function ScannerQR() {
+export default function ScannerQR({mode, test, setTest}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -17,8 +17,19 @@ export default function ScannerQR() {
     }, []);
 
     const handleBarCodeScanned = ({ type, data }) => {
-        setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        if (mode == 'Carte membre' || mode == 'Code spot'){
+            setTest(mode)
+            setScanned(true);
+            log("go step 2!!!")
+        }
+
+        if (mode == 'Livre' && !test){
+            setScanned(true);
+            alert(`NTM`);
+        }
+
+        // setScanned(true);
+        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
     if (hasPermission === null) {
