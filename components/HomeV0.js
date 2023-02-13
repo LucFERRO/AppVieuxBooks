@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Dimensions, Text, View, Pressable } from 'react-native';
-import ScannerQR from './ScannerQR'
+import ScannerQR from './ScanSpotUser'
 import { scannerQRStyles } from './StyleHome'
 import { useState, useEffect, useRef } from 'react';
 
