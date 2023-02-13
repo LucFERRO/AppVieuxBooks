@@ -72,12 +72,12 @@ const listSpot = [
     }
 ]
 
-export default function ScannerQR({ mode }) {
+export default function ScanSpotUser({ mode }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
     const speak = async (text) => {
-        Speech.speak(text, {voice: "ja-JP-language"});
+        Speech.speak(text);
       };
 
     useEffect(() => {
@@ -96,33 +96,34 @@ export default function ScannerQR({ mode }) {
     }
 
     const handleBarCodeScanned = ({ type, data }) => {
+
         if (mode == 'Carte membre') {
             setScanned(true);
-
+            
             let res = data.split('memberCard')
             if (res.length == 1) {
-                speak("apprend a lire, Enculé !!")
-                alert('apprends à lire enculé')
+                speak("apprend a lire !!")
+                return alert('apprends à lire ')
             } 
             res = JSON.parse(res[0] + '"' + "memberId" + '"' + res[1])
-            const chosenUser = listUser.filter(user => user.code == res.memberId)[0]
+            // const chosenUser = listUser.filter(user => user.code == res.memberId)[0]
             // apiService.post('list', data).then(res=> {
-// 
-            // })
-            if (!chosenUser) return console.log('USER NOT FOUND')
-            switchScreen('book')
+                // 
+                // })
+            // if (!chosenUser) return console.log('USER NOT FOUND')
+            switchScreen(`book/${res.memberId}`)
         }
-
+        
         if (mode == 'Code spot') {
             setScanned(true);
-
+            console.log(data)
             let res = data.split('spotId')
             if (res.length == 1) return alert('apprends à lire enculé')
             res = JSON.parse(res[0] + '"' + "spotId" + '"' + res[1])
-            const chosenSpot = listSpot.filter(spot => spot._id == res.spotId)[0]
+            // const chosenSpot = listSpot.filter(spot => spot._id == res.spotId)[0]
             // apiService.post('list', data).then(res=>console.log(res))
-            if (!chosenSpot) return console.log('SPOT NOT FOUND')
-            switchScreen('book')
+            // if (!chosenSpot) return console.log('SPOT NOT FOUND')
+            switchScreen(`book/${res.spotId}`)
         }
 
         // setScanned(true);

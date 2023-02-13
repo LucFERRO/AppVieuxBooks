@@ -1,62 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
-import { useNavigate, Link } from 'react-router-native'
+import { useNavigate, Link, useParams } from 'react-router-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
 
-const list = [
-    {
-        "name": "Gaetan",
-        "code": "43DZFDFR"
-    },
-    {
-        "name": "Marc",
-        "code": "ZAFH34R"
-    },
-    {
-        "name": "LucF",
-        "code": "A4JAF432"
-    },
-    {
-        "name": "LucV",
-        "code": "FZAEU3D3A"
-    },
-    {
-        "name": "Nico",
-        "code": "U34R543"
-    },
-    {
-        "name": "Flo",
-        "code": "IN43NI32"
-    },
-    {
-        "name": "Léonard",
-        "code": "FIF34R34R"
-    },
-    {
-        "name": "Rémy",
-        "code": "Ff3AF432"
-    },
-    {
-        "name": "Vincent",
-        "code": "1R3FAF"
-    },
-    {
-        "name": "Ghedeon",
-        "code": "343DJIE"
-    },
-    {
-        "name": "Alexis",
-        "code": "34RNJ3D"
-    },
-    {
-        "name": "Brigitte",
-        "code": "JI34NF32",
-        "admin": true
-    }
-]
+export default function ScanBook({ mode }) {
+    let { id } = useParams();
+    let borrowOrReturn = id.length > 22 ? 'return' : 'borrow'
 
-export default function ScannerBook({ mode }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -75,19 +26,37 @@ export default function ScannerBook({ mode }) {
         return navigate(`/${page}`)
     }
 
+    const borrowOrReturnBookData = (borrowOrReturn, id) => {
+        let data
+        if (borrowOrReturn == 'borrow') {
+            data = {
+                user_id: id
+            }
+        } else {
+            data = {
+                date: null,
+                user_id: null,
+                spot_id: id
+            }
+        }
+        return data
+    }
+
     const handleBarCodeScanned = ({ type, data }) => {
         if (mode == 'Livre') {
             setScanned(true);
 
-            let res = data.split('spotId')
+            let res = data.split('bookId')
+            if (res.length == 1) return alert('apprends à lire')
+            res = JSON.parse(res[0] + '"' + "bookId" + '"' + res[1])
 
-            if (res.length == 1) return alert('apprends à lire enculé')
-            
-            res = JSON.parse(res[0] + '"' + "spotId" + '"' + res[1])
-            const chosenSpot = listSpot.filter(spot => spot._id == res.spotId)[0]
-            if (!chosenSpot) return console.log('SPOT NOT FOUND')
-            // apiService.post('list', data).then(res=>console.log(res))
-            switchScreen('book')
+            let updateData = borrowOrReturnBookData(borrowOrReturn, id)
+
+            //triche éco ticket
+            if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63ea12944bd6a95522e8486e'
+            //
+
+            apiService.put(`books/${res.bookId}`, updateData).then(res => console.log(res.message))
         }
         // setScanned(true);
         // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
@@ -99,9 +68,6 @@ export default function ScannerBook({ mode }) {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
-
-
-
 
     return (
         <View style={styles.container}>
@@ -122,7 +88,7 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         // width: 300,
         // height: 200,
-        backgroundColor: "red",
+        backgroundColor: "blue",
         flex: 1
     },
 }); 

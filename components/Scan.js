@@ -1,7 +1,8 @@
 import { View, Text } from "react-native";
 import { useState } from "react";
 import BackButton from "./BackButton";
-import ScannerQR from "./ScanSpotUser";
+import ScanSpotUser from "./ScanSpotUser";
+import ScanBook from "./ScanBook";
 import { scannerStyles } from "./StyleScan";
 
 export default function Scan({ buttonText }) {
@@ -10,7 +11,7 @@ export default function Scan({ buttonText }) {
         <View style={scannerStyles.container}>
             <Text style={scannerStyles.description}>Scannez votre {buttonText}</Text>
             <View style={scannerStyles.full}>
-                <ScannerQR mode={buttonText} />
+                {buttonText == 'Livre' ? <ScanBook mode={buttonText} /> : <ScanSpotUser mode={buttonText} />}
             </View>
             <View>
                 <BackButton />

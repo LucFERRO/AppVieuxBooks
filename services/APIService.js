@@ -1,4 +1,5 @@
-const url = 'http://localhost:5000';
+const url= 'http://195.179.193.144:1506'
+// const url= 'http://localhost:5000';
 
 import axios from 'axios'
 
