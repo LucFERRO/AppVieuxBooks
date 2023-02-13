@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { useNavigate, Link } from 'react-router-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
+import * as Speech from 'expo-speech';
 
 const listUser = [
     {
@@ -75,6 +76,10 @@ export default function ScannerQR({ mode }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
+    const speak = async (text) => {
+        Speech.speak(text, {voice: "ja-JP-language"});
+      };
+
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -95,7 +100,10 @@ export default function ScannerQR({ mode }) {
             setScanned(true);
 
             let res = data.split('memberCard')
-            if (res.length == 1) return alert('apprends à lire enculé')
+            if (res.length == 1) {
+                speak("apprend a lire, Enculé !!")
+                alert('apprends à lire enculé')
+            } 
             res = JSON.parse(res[0] + '"' + "memberId" + '"' + res[1])
             const chosenUser = listUser.filter(user => user.code == res.memberId)[0]
             // apiService.post('list', data).then(res=> {
