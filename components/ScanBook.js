@@ -8,6 +8,8 @@ export default function ScanBook({ mode }) {
     let { id } = useParams();
     let borrowOrReturn = id.length > 22 ? 'return' : 'borrow'
 
+    const [loggedUser, setLoggedUser] = useState(null)
+    const [scannedSpot, setScannedSpot] = useState(null)
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -16,8 +18,17 @@ export default function ScanBook({ mode }) {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === 'granted');
         };
-
         getBarCodeScannerPermissions();
+
+        if (borrowOrReturn == 'borrow') {
+            apiService.get('list').then(response => {
+                setLoggedUser(response.data.filter(user => user.code == id)[0])
+            })
+        } else {
+            apiService.get('spots').then(response => {
+                setScannedSpot(response.data.filter(spot => spot._id == id)[0])
+            })
+        }
     }, []);
 
     const navigate = useNavigate()
@@ -45,6 +56,7 @@ export default function ScanBook({ mode }) {
     const handleBarCodeScanned = ({ type, data }) => {
         if (mode == 'Livre') {
             setScanned(true);
+            console.log(data)
 
             let res = data.split('bookId')
             if (res.length == 1) return alert('apprends à lire')
@@ -53,13 +65,16 @@ export default function ScanBook({ mode }) {
             let updateData = borrowOrReturnBookData(borrowOrReturn, id)
 
             //triche éco ticket
-            if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63ea12944bd6a95522e8486e'
+
+            //étiquette de gauche
+            if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63eb48947bdb1f5f405cb610'
+
+            //étiquette de droite
+            if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63eb48c67bdb1f5f405cb613'
             //
 
             apiService.put(`books/${res.bookId}`, updateData).then(res => console.log(res.message))
         }
-        // setScanned(true);
-        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
     if (hasPermission === null) {
@@ -69,8 +84,16 @@ export default function ScanBook({ mode }) {
         return <Text>No access to camera</Text>;
     }
 
+    if (!loggedUser && !scannedSpot) return
+
     return (
         <View style={styles.container}>
+            {
+                borrowOrReturn == 'borrow' ?
+                    <Text style={styles.user}>{`${loggedUser.admin ? 'Admin' : ''} ${loggedUser.name}`}</Text>
+                    :
+                    <Text style={styles.spot}>{scannedSpot.address}</Text>
+            }
             <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
@@ -83,12 +106,18 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         borderWidth: 2,
         borderColor: 'red',
-        // width: 300,
-        // height: 200,
-        backgroundColor: "blue",
+        backgroundColor: 'red',
         flex: 1
     },
+    user: {
+        fontSize: 30,
+        zIndex: 5
+    },
+    spot: {
+        fontSize: 20,
+        zIndex: 5
+    }
 }); 

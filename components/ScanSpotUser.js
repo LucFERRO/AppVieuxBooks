@@ -5,73 +5,6 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
 import * as Speech from 'expo-speech';
 
-const listUser = [
-    {
-        "name": "Gaetan",
-        "code": "43DZFDFR"
-    },
-    {
-        "name": "Marc",
-        "code": "ZAFH34R"
-    },
-    {
-        "name": "LucF",
-        "code": "A4JAF432"
-    },
-    {
-        "name": "LucV",
-        "code": "FZAEU3D3A"
-    },
-    {
-        "name": "Nico",
-        "code": "U34R543"
-    },
-    {
-        "name": "Flo",
-        "code": "IN43NI32"
-    },
-    {
-        "name": "Léonard",
-        "code": "FIF34R34R"
-    },
-    {
-        "name": "Rémy",
-        "code": "Ff3AF432"
-    },
-    {
-        "name": "Vincent",
-        "code": "1R3FAF"
-    },
-    {
-        "name": "Ghedeon",
-        "code": "343DJIE"
-    },
-    {
-        "name": "Alexis",
-        "code": "34RNJ3D"
-    },
-    {
-        "name": "Brigitte",
-        "code": "JI34NF32",
-        "admin": true
-    }
-]
-
-const listSpot = [
-    {
-        _id: '63e4ed537d91ea19bcc06259',
-        address: "9 rue du régiment de la chaudière",
-        createdAt: '2023-02 - 09T12: 55: 47.392+00: 00',
-        __v: 0
-    },
-    {
-        _id: '63e4ed95a4783b73dae3faf1',
-        address: "Place Dalton",
-        createdAt: '2023 - 02 - 09T12: 56: 53.674 + 00: 00',
-        __v: 0
-    }
-]
-
 export default function ScanSpotUser({ mode }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -125,20 +58,14 @@ export default function ScanSpotUser({ mode }) {
             // if (!chosenSpot) return console.log('SPOT NOT FOUND')
             switchScreen(`book/${res.spotId}`)
         }
-
-        // setScanned(true);
-        // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
     if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
+        return <Text style={styles.errorMessage}>Requesting for camera permission</Text>;
     }
     if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
+        return <Text style={styles.errorMessage}>No access to camera</Text>;
     }
-
-
-
 
     return (
         <View style={styles.container}>
@@ -157,9 +84,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderWidth: 2,
         borderColor: 'red',
-        // width: 300,
-        // height: 200,
         backgroundColor: "red",
         flex: 1
     },
+    errorMessage: {
+        textAlign: 'center',
+    }
 }); 

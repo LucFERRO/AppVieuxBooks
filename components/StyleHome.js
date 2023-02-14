@@ -4,12 +4,18 @@ const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 export const scannerQRStyles = StyleSheet.create({
-    container: {
+
+    background: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: 'red',
+        paddingVertical: 100,
+        left: 0
+    },
+    title: {
+        fontSize: 40
     },
     button: {
         borderRadius: 50,
@@ -21,5 +27,5 @@ export const scannerQRStyles = StyleSheet.create({
         borderColor: "gold",
         borderWidth: 2,
         backgroundColor: 'cyan',
-       },
+    },
 });

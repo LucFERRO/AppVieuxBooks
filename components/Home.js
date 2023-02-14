@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Dimensions, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Dimensions, Text, View, Pressable, ImageBackground } from 'react-native';
 import { useNavigate, Link } from 'react-router-native'
 import { scannerQRStyles } from './StyleHome'
 import { useState, useEffect, useRef } from 'react';
@@ -13,8 +13,8 @@ export default function Home() {
     }
 
     return (
-        <View style={scannerQRStyles.container}>
-            <Text>App Vieux Books</Text>
+        <ImageBackground source={require('../assets/livreIA.png')} style={scannerQRStyles.background}>
+            <Text style={scannerQRStyles.title}>App Vieux Books</Text>
             <Pressable onPress={() => switchScreen('card')} style={scannerQRStyles.button}>
                 <Text>
                     Emprunter un livre
@@ -26,7 +26,7 @@ export default function Home() {
                 </Text>
             </Pressable>
             <StatusBar style="none" />
-        </View>
+        </ImageBackground>
     );
 
 }
