@@ -14,7 +14,6 @@ export default function App() {
                 <Route path="/card" element={<Scan buttonText={'Carte membre'} />} />
                 <Route path="/spot" element={<Scan buttonText={'Code spot'} />} />
                 <Route path="/book/:id" element={<Scan buttonText={'Livre'}/>} />
-                {/* <Route path="*" element={<Text>Baise tes morts</Text>} /> */}
             </Routes>
         </NativeRouter>
     );

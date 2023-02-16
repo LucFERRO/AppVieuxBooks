@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ImageBackground } from "react-native";
 import { useState } from "react";
 import BackButton from "./BackButton";
 import ScanSpotUser from "./ScanSpotUser";
@@ -8,7 +8,7 @@ import { scannerStyles } from "./StyleScan";
 export default function Scan({ buttonText }) {
 
     return (
-        <View style={scannerStyles.container}>
+        <ImageBackground source={require('../assets/livreIA.png')} style={scannerStyles.container}>
             <Text style={scannerStyles.description}>Scannez votre {buttonText}</Text>
             <View style={scannerStyles.full}>
                 {buttonText == 'Livre' ? <ScanBook mode={buttonText} /> : <ScanSpotUser mode={buttonText} />}
@@ -16,6 +16,6 @@ export default function Scan({ buttonText }) {
             <View>
                 <BackButton />
             </View>
-        </View>
+        </ImageBackground>
     );
 }

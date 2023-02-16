@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { useNavigate, Link, useParams } from 'react-router-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
+import * as colors from './Colors'
 
 export default function ScanBook({ mode }) {
     let { id } = useParams();
@@ -19,15 +20,14 @@ export default function ScanBook({ mode }) {
             setHasPermission(status === 'granted');
         };
         getBarCodeScannerPermissions();
-
         if (borrowOrReturn == 'borrow') {
             apiService.get('list').then(response => {
                 setLoggedUser(response.data.filter(user => user.code == id)[0])
-            })
+            }).catch(error => console.log(error))
         } else {
             apiService.get('spots').then(response => {
                 setScannedSpot(response.data.filter(spot => spot._id == id)[0])
-            })
+            }).catch(error => console.log(error))
         }
     }, []);
 
@@ -53,10 +53,9 @@ export default function ScanBook({ mode }) {
         return data
     }
 
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = async ({ type, data }) => {
         if (mode == 'Livre') {
             setScanned(true);
-            console.log(data)
 
             let res = data.split('bookId')
             if (res.length == 1) return alert('apprends à lire')
@@ -73,7 +72,12 @@ export default function ScanBook({ mode }) {
             if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63eb48c67bdb1f5f405cb613'
             //
 
-            apiService.put(`books/${res.bookId}`, updateData).then(res => console.log(res.message))
+            try {
+                apiService.put(`books/${res.bookId}`, updateData)
+                // .then(res => console.log(res.message)).catch(error => throw new Error(error))
+            } catch (error) {
+                throw new Error(error)
+            }
         }
     };
 
@@ -98,7 +102,7 @@ export default function ScanBook({ mode }) {
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
-            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+            {scanned && <Button title={`${borrowOrReturn == 'return' ? 'Rendre' : 'Emprunter'} un autre livre?`} onPress={() => setScanned(false)} />}
         </View>
     );
 }
@@ -107,17 +111,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        borderWidth: 2,
-        borderColor: 'red',
-        backgroundColor: 'red',
+        backgroundColor: 'transparent',
         flex: 1
     },
     user: {
-        fontSize: 30,
-        zIndex: 5
+        fontSize: 40,
+        fontWeight: '900',
+        fontStyle: 'italic',
+        color: colors.pink,
+        textShadowColor: colors.orange,
+        textShadowOffset: { width: -1, height: 2 },
+        textShadowRadius: 10,
     },
     spot: {
         fontSize: 20,
-        zIndex: 5
+        fontWeight: '900',
+        fontStyle: 'italic',
+        color: colors.pink,
+        textShadowColor: colors.orange,
+        textShadowOffset: { width: -1, height: 2 },
+        textShadowRadius: 10,
     }
 }); 

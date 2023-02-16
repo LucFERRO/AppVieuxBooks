@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import * as colors from './Colors'
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
@@ -9,17 +10,18 @@ export const scannerStyles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "red",
   },
   full: {
     width: width,
     height: height * .6,
   },
   description: {
-    borderColor: "black",
-    borderWidth: 3,
     padding: 30,
-    color: "black",
-    backgroundColor: 'gold'
+    color: colors.orange,
+    borderRadius: 10,
+    backgroundColor: colors.purple,
+    borderColor: colors.orange,
+    borderWidth: 2,
+    fontSize: 20
   }
 });

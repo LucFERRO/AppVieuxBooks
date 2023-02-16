@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
 import * as Speech from 'expo-speech';
+import * as colors from './Colors'
 
 export default function ScanSpotUser({ mode }) {
     const [hasPermission, setHasPermission] = useState(null);
@@ -11,7 +12,7 @@ export default function ScanSpotUser({ mode }) {
 
     const speak = async (text) => {
         Speech.speak(text);
-      };
+    };
 
     useEffect(() => {
         const getBarCodeScannerPermissions = async () => {
@@ -32,39 +33,26 @@ export default function ScanSpotUser({ mode }) {
 
         if (mode == 'Carte membre') {
             setScanned(true);
-            
             let res = data.split('memberCard')
-            if (res.length == 1) {
-                speak("apprend a lire !!")
-                return alert('apprends à lire ')
-            } 
+            if (res.length == 1) return speak(("Scanner livre."))
             res = JSON.parse(res[0] + '"' + "memberId" + '"' + res[1])
-            // const chosenUser = listUser.filter(user => user.code == res.memberId)[0]
-            // apiService.post('list', data).then(res=> {
-                // 
-                // })
-            // if (!chosenUser) return console.log('USER NOT FOUND')
             switchScreen(`book/${res.memberId}`)
         }
-        
+
         if (mode == 'Code spot') {
             setScanned(true);
-            console.log(data)
             let res = data.split('spotId')
-            if (res.length == 1) return alert('apprends à lire enculé')
+            if (res.length == 1) return speak(("Scanner carte spot."))
             res = JSON.parse(res[0] + '"' + "spotId" + '"' + res[1])
-            // const chosenSpot = listSpot.filter(spot => spot._id == res.spotId)[0]
-            // apiService.post('list', data).then(res=>console.log(res))
-            // if (!chosenSpot) return console.log('SPOT NOT FOUND')
             switchScreen(`book/${res.spotId}`)
         }
     };
 
     if (hasPermission === null) {
-        return <Text style={styles.errorMessage}>Requesting for camera permission</Text>;
+        return <Text style={styles.errorMessage}>En attente de la caméra.</Text>;
     }
     if (hasPermission === false) {
-        return <Text style={styles.errorMessage}>No access to camera</Text>;
+        return <Text style={styles.errorMessage}>Accès à la caméra refusé.</Text>;
     }
 
     return (
@@ -73,21 +61,27 @@ export default function ScanSpotUser({ mode }) {
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
-            {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+            {scanned && <Button title={'Réessayer'} onPress={() => setScanned(false)} />}
         </View>
     );
 }
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 2,
-        borderColor: 'red',
-        backgroundColor: "red",
-        flex: 1
+        backgroundColor: 'transparent',
     },
     errorMessage: {
         textAlign: 'center',
+        fontSize: 40,
+        fontWeight: '900',
+        fontStyle: 'italic',
+        color: colors.pink,
+        textShadowColor: colors.orange,
+        textShadowOffset: { width: -1, height: 2 },
+        textShadowRadius: 10,
+        zIndex: 10
     }
 }); 
