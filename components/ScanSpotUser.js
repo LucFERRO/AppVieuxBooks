@@ -34,7 +34,7 @@ export default function ScanSpotUser({ mode }) {
         if (mode == 'Carte membre') {
             setScanned(true);
             let res = data.split('memberCard')
-            if (res.length == 1) return speak(("Scanner livre."))
+            if (res.length == 1) return speak(("Scanner votre carte membre."))
             res = JSON.parse(res[0] + '"' + "memberId" + '"' + res[1])
             switchScreen(`book/${res.memberId}`)
         }
@@ -42,8 +42,15 @@ export default function ScanSpotUser({ mode }) {
         if (mode == 'Code spot') {
             setScanned(true);
             let res = data.split('spotId')
-            if (res.length == 1) return speak(("Scanner carte spot."))
+            if (res.length == 1) return speak(("Scanner la carte spot."))
             res = JSON.parse(res[0] + '"' + "spotId" + '"' + res[1])
+
+            // //étiquette de gauche
+            // if (res.spotId == '63e4ed537d91ea19bcc06259') res.spotId = '63ef5979e88feace472348f4'
+
+            // //étiquette de droite
+            // if (res.spotId == '63e4ed95a4783b73dae3faf1') res.spotId = '63ef5964e88feace472348f2'
+
             switchScreen(`book/${res.spotId}`)
         }
     };

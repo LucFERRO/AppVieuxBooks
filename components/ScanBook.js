@@ -4,6 +4,7 @@ import { useNavigate, Link, useParams } from 'react-router-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { apiService } from '../services/APIService';
 import * as colors from './Colors'
+import * as Speech from 'expo-speech';
 
 export default function ScanBook({ mode }) {
     let { id } = useParams();
@@ -37,6 +38,10 @@ export default function ScanBook({ mode }) {
         return navigate(`/${page}`)
     }
 
+    const speak = async (text) => {
+        Speech.speak(text);
+    };
+
     const borrowOrReturnBookData = (borrowOrReturn, id) => {
         let data
         if (borrowOrReturn == 'borrow') {
@@ -58,19 +63,19 @@ export default function ScanBook({ mode }) {
             setScanned(true);
 
             let res = data.split('bookId')
-            if (res.length == 1) return alert('apprends à lire')
+            if (res.length == 1) return speak(("Scanner un code livre."))
             res = JSON.parse(res[0] + '"' + "bookId" + '"' + res[1])
 
             let updateData = borrowOrReturnBookData(borrowOrReturn, id)
 
             //triche éco ticket
 
-            //étiquette de gauche
-            if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63eb48947bdb1f5f405cb610'
+            // //étiquette de gauche
+            // if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63ef5a7ce88feace472348fc'
 
-            //étiquette de droite
-            if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63eb48c67bdb1f5f405cb613'
-            //
+            // //étiquette de droite
+            // if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63ef5b79e88feace47234908'
+            // //
 
             try {
                 apiService.put(`books/${res.bookId}`, updateData)
