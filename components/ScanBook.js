@@ -71,10 +71,10 @@ export default function ScanBook({ mode }) {
             //triche éco ticket
 
             // //étiquette de gauche
-            // if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63ef5a7ce88feace472348fc'
+            if (res.bookId == '63e50b1e8b98549100a6985c') res.bookId = '63ef5a7ce88feace472348fc'
 
             // //étiquette de droite
-            // if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63ef5b79e88feace47234908'
+            if (res.bookId == '63ea12944bd6a95522e8486f') res.bookId = '63ef5b79e88feace47234908'
             // //
 
             try {
